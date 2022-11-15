@@ -13,8 +13,16 @@ export async function cashOut(req:Request, res:Response) {
 
 export async function myTransactions(req:Request, res:Response) {
     const { userInfo } = res.locals;
-
     const transactions = await transactionServices.getTransactions(userInfo.data.id);
 
     res.status(200).send(transactions);
-}
+};
+
+export async function transactionsByDate(req:Request, res:Response) {
+    const { userInfo } = res.locals;
+    const { date } = req.body;
+
+    const transactions = await transactionServices.filterByDate(userInfo.data, date);
+
+    res.status(200).send(transactions)
+};
