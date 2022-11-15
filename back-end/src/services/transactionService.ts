@@ -27,8 +27,13 @@ async function cashOut(user:IUserInfo, receiver:ReceiverInfo) {
     await transactionsRepository.insert(transactionInfo);
 };
 
+async function getTransactions(id:number) {
+    return await transactionsRepository.getUserTransactions(id);
+};
+
 const transactionServices = {
-    cashOut
+    cashOut,
+    getTransactions
 };
 
 export default transactionServices;

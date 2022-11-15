@@ -8,5 +8,13 @@ export async function cashOut(req:Request, res:Response) {
 
     await transactionServices.cashOut(userInfo.data, transactionInfo)
 
-    res.status(201).send('done');
+    res.status(201).send('Transaction completed!');
 };
+
+export async function myTransactions(req:Request, res:Response) {
+    const { userInfo } = res.locals;
+
+    const transactions = await transactionServices.getTransactions(userInfo.data.id);
+
+    res.status(200).send(transactions);
+}
