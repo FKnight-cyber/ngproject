@@ -2,7 +2,7 @@ import { IUserData, IRegisterUserData } from '../types/userTypes';
 import accountRepository from '../repositories/accountRepository';
 import authRepository from '../repositories/authRepository';
 import { checkError } from '../middlewares/errorHandler';
-import { encrypt } from '../utils/authUtils';
+import { encrypt, decrypt, generateUserToken } from '../utils/authUtils';
 
 async function registerUser(user:IUserData) {
     user.username = user.username.trim();
@@ -24,8 +24,28 @@ async function registerUser(user:IUserData) {
     await authRepository.insert(validUser);
 };
 
+async function login(user:IUserData) {
+    const checkUser = await authRepository.findUserByName(user.username);
+    if(!checkUser) throw checkError(404, "User not registered!");
+
+    if(!decrypt(user.password, checkUser.password)) throw checkError(401,"Wrong password!");
+
+    const userBalance = await accountRepository.getAccountById(checkUser.id);
+
+    const userInfo = {
+        id: checkUser.id,
+        username: checkUser.username,
+        balance: userBalance.balance
+    };
+
+    const token = generateUserToken(userInfo);
+
+    return token;
+};
+
 const authServices = {
-    registerUser
+    registerUser,
+    login
 };
 
 export default authServices;

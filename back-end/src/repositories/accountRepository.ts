@@ -8,9 +8,14 @@ async function getLastAccount() {
     return prisma.accounts.findFirst({orderBy:{id:'desc'}});
 };
 
+async function getAccountById(id:number) {
+    return prisma.accounts.findUnique({where:{id}});
+}
+
 const accountsRepository = {
     insert,
-    getLastAccount
+    getLastAccount,
+    getAccountById
 };
 
 export default accountsRepository;
