@@ -10,12 +10,40 @@ async function getLastAccount() {
 
 async function getAccountById(id:number) {
     return prisma.accounts.findUnique({where:{id}});
-}
+};
+
+async function cashOut(id:number, value:number) {
+    await prisma.accounts.update({
+        where:{
+            id
+        },
+        data:{
+            balance:{
+                decrement: Number(value)
+            }
+        }
+    });
+};
+
+async function cashIn(id:number, value:number) {
+    await prisma.accounts.update({
+        where:{
+            id
+        },
+        data:{
+            balance:{
+                increment: Number(value)
+            }
+        }
+    });
+};
 
 const accountsRepository = {
     insert,
     getLastAccount,
-    getAccountById
+    getAccountById,
+    cashOut,
+    cashIn
 };
 
 export default accountsRepository;

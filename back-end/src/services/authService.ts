@@ -30,12 +30,9 @@ async function login(user:IUserData) {
 
     if(!decrypt(user.password, checkUser.password)) throw checkError(401,"Wrong password!");
 
-    const userBalance = await accountRepository.getAccountById(checkUser.id);
-
     const userInfo = {
         id: checkUser.id,
-        username: checkUser.username,
-        balance: userBalance.balance
+        username: checkUser.username
     };
 
     const token = generateUserToken(userInfo);
