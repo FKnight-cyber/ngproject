@@ -34,12 +34,22 @@ async function getTransactions(id:number) {
 
 async function filterByDate(user:IUserInfo, date:Date) {
     return await transactionsRepository.transactionsByDate(user.id, date, tomorrow(date)) 
-}
+};
+
+async function getCashOut(user:IUserInfo) {
+    return await transactionsRepository.cashOutInfo(user.id);
+};
+
+async function getCashIn(user:IUserInfo) {
+    return await transactionsRepository.cashInInfo(user.id);
+};
 
 const transactionServices = {
     cashOut,
     getTransactions,
-    filterByDate
+    filterByDate,
+    getCashOut,
+    getCashIn
 };
 
 export default transactionServices;

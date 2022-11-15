@@ -29,10 +29,28 @@ async function transactionsByDate(id:number, dateInit:Date, dateEnd:number) {
     });
 };
 
+async function cashOutInfo(id:number) {
+    return prisma.transactions.findMany({
+        where:{
+            debitedAccountId: id 
+        }
+    });
+};
+
+async function cashInInfo(id:number) {
+    return prisma.transactions.findMany({
+        where:{
+            creditedAccountId: id 
+        }
+    });
+};
+
 const transactionsRepository = {
     insert,
     getUserTransactions,
-    transactionsByDate
+    transactionsByDate,
+    cashOutInfo,
+    cashInInfo
 };
 
 export default transactionsRepository;

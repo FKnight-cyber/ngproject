@@ -26,3 +26,19 @@ export async function transactionsByDate(req:Request, res:Response) {
 
     res.status(200).send(transactions)
 };
+
+export async function cashOutInfo(req:Request, res:Response) {
+    const { userInfo } = res.locals;
+
+    const transactions = await transactionServices.getCashOut(userInfo.data);
+
+    res.status(200).send(transactions)
+};
+
+export async function cashInInfo(req:Request, res:Response) {
+    const { userInfo } = res.locals;
+
+    const transactions = await transactionServices.getCashIn(userInfo.data);
+
+    res.status(200).send(transactions)
+};
