@@ -293,6 +293,8 @@ To run this project, you will need to add the following environment variables to
 
 `POSTGRES_PORT = 5432`
 
+`HOST = localhost `
+
 `PORT = number #recommended:5000`
 
 `JWT_SECRET = string `
