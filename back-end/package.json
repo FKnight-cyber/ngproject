@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "npx prisma migrate deploy && node dist/server.js",
     "dev": "dotenv -e .env.development nodemon ./src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prisma:migrate": "dotenv -e .env.test npx prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
