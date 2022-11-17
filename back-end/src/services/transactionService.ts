@@ -5,6 +5,7 @@ import authRepository from '../repositories/authRepository';
 import transactionsRepository from '../repositories/transactionRepository';
 import accountsRepository from '../repositories/accountRepository';
 import { tomorrow } from '../utils/transactionUtils';
+import { Transactions } from '@prisma/client';
 
 async function cashOut(user:IUserInfo, receiver:ReceiverInfo) {
     if(user.username === receiver.username) throw checkError(409, "Can`t cashout to yourself!");
@@ -30,6 +31,37 @@ async function cashOut(user:IUserInfo, receiver:ReceiverInfo) {
 
 async function getTransactions(id:number) {
     const transactions = await transactionsRepository.getUserTransactions(id);
+
+    const data = await addUsername(transactions, id);
+
+    return data;
+};
+
+async function filterByDate(user:IUserInfo, date:Date) {
+    const transactions = await transactionsRepository.transactionsByDate(user.id, date, tomorrow(date));
+
+    const data = await addUsername(transactions, user.id);
+
+    return data;
+};
+
+async function getCashOut(user:IUserInfo) {
+    const transactions = await transactionsRepository.cashOutInfo(user.id);
+
+    const data = await addUsername(transactions, user.id);
+
+    return data;
+};
+
+async function getCashIn(user:IUserInfo) {
+    const transactions = await transactionsRepository.cashInInfo(user.id);
+
+    const data = await addUsername(transactions, user.id);
+
+    return data;
+};
+
+async function addUsername(transactions:Transactions[], id:number) {
 
     type Transactions = {
         id:number,
@@ -68,133 +100,7 @@ async function getTransactions(id:number) {
     }
 
     return data;
-};
-
-async function filterByDate(user:IUserInfo, date:Date) {
-    const transactions = await transactionsRepository.transactionsByDate(user.id, date, tomorrow(date));
-
-    type Transactions = {
-        id:number,
-        debitedAccountId:number,
-        creditedAccountId:number,
-        value:number,
-        createdAt:Date,
-        username:string
-    };
-
-    const data:Transactions[] = [];
-
-    for(let transaction of transactions) {
-        if(transaction.debitedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.debitedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-        if(transaction.creditedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.creditedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-    }
-
-    return data;
-};
-
-async function getCashOut(user:IUserInfo) {
-    const transactions = await transactionsRepository.cashOutInfo(user.id);
-
-    type Transactions = {
-        id:number,
-        debitedAccountId:number,
-        creditedAccountId:number,
-        value:number,
-        createdAt:Date,
-        username:string
-    };
-
-    const data:Transactions[] = [];
-
-    for(let transaction of transactions) {
-        if(transaction.debitedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.debitedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-        if(transaction.creditedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.creditedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-    }
-
-    return data;
-};
-
-async function getCashIn(user:IUserInfo) {
-    const transactions = await transactionsRepository.cashInInfo(user.id);
-
-    type Transactions = {
-        id:number,
-        debitedAccountId:number,
-        creditedAccountId:number,
-        value:number,
-        createdAt:Date,
-        username:string
-    };
-
-    const data:Transactions[] = [];
-
-    for(let transaction of transactions) {
-        if(transaction.debitedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.debitedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-        if(transaction.creditedAccountId !== user.id){
-            const user = await authRepository.findUserById(transaction.creditedAccountId);
-            data.push({
-                id: transaction.id,
-                debitedAccountId: transaction.debitedAccountId,
-                creditedAccountId: transaction.creditedAccountId,
-                value: transaction.value,
-                createdAt: transaction.createdAt,
-                username: user.username
-            });
-        }
-    }
-
-    return data;
-};
+}
 
 const transactionServices = {
     cashOut,
