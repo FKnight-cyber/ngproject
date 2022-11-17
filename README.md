@@ -94,7 +94,7 @@ POST /sign-in
 
 ```
 http://localhost:5000
-GET /account/info/:id
+GET /account/info
 ```
 
 #### Request:
@@ -173,11 +173,12 @@ POST /my/transactions/date
 ```json
 [
   {
-    "id": 1,
-    "debitedAccountId": 3,
-    "creditedAccountId": 4,
-    "value": 50,
-    "createdAt": "2022-11-18T12:33:15.387Z"
+    "id": 9,
+    "debitedAccountId": 6,
+    "creditedAccountId": 3,
+    "value": 30,
+    "createdAt": "2022-11-15T15:18:56.867Z",
+    "username": "fulanodetal3"
   },
   ...
 ]
@@ -207,11 +208,12 @@ GET /my/transactions
 ```json
 [
   {
-    "id": 1,
-    "debitedAccountId": 3,
-    "creditedAccountId": 4,
-    "value": 50,
-    "createdAt": "2022-11-18T12:33:15.387Z"
+    "id": 9,
+    "debitedAccountId": 6,
+    "creditedAccountId": 3,
+    "value": 30,
+    "createdAt": "2022-11-15T15:18:56.867Z",
+    "username": "fulanodetal3"
   },
   ...
 ]
@@ -243,7 +245,8 @@ GET /my/transactions/out
     "debitedAccountId": 6,
     "creditedAccountId": 3,
     "value": 30,
-    "createdAt": "2022-11-15T15:18:56.867Z"
+    "createdAt": "2022-11-15T15:18:56.867Z",
+    "username": "fulanodetal3"
   },
   ...
 ]

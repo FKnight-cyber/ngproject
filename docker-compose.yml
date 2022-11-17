@@ -27,7 +27,7 @@ services:
     env_file:
       - front-end/.env
     volumes:
-      - build_react:/var/www/html
+      - react_build:/var/www/html
 
   nginx_app:
     container_name: ngcash_nginx
@@ -35,7 +35,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - build_react:/var/www/html
+      - react_build:/var/www/html
     depends_on:
       - db
       - node_app
@@ -43,4 +43,4 @@ services:
 
 volumes:
   postgres:
-  build_react:
+  react_build:

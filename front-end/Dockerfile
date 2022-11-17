@@ -1,12 +1,16 @@
 FROM node:16
 
+RUN mkdir /app
+
 WORKDIR /app
 
-COPY . .
+COPY ["package.json", "tsconfig.json", "/app/"]
 
-RUN npm i --legacy-peer-deps
+COPY ./ /app/
 
-RUN npm run build 
+RUN cd /app && npm i --legacy-peer-deps
+
+RUN npm -s run build
 
 RUN mkdir -p /var/www/html
 

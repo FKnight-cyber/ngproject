@@ -71,15 +71,129 @@ async function getTransactions(id:number) {
 };
 
 async function filterByDate(user:IUserInfo, date:Date) {
-    return await transactionsRepository.transactionsByDate(user.id, date, tomorrow(date)) 
+    const transactions = await transactionsRepository.transactionsByDate(user.id, date, tomorrow(date));
+
+    type Transactions = {
+        id:number,
+        debitedAccountId:number,
+        creditedAccountId:number,
+        value:number,
+        createdAt:Date,
+        username:string
+    };
+
+    const data:Transactions[] = [];
+
+    for(let transaction of transactions) {
+        if(transaction.debitedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.debitedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+        if(transaction.creditedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.creditedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+    }
+
+    return data;
 };
 
 async function getCashOut(user:IUserInfo) {
-    return await transactionsRepository.cashOutInfo(user.id);
+    const transactions = await transactionsRepository.cashOutInfo(user.id);
+
+    type Transactions = {
+        id:number,
+        debitedAccountId:number,
+        creditedAccountId:number,
+        value:number,
+        createdAt:Date,
+        username:string
+    };
+
+    const data:Transactions[] = [];
+
+    for(let transaction of transactions) {
+        if(transaction.debitedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.debitedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+        if(transaction.creditedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.creditedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+    }
+
+    return data;
 };
 
 async function getCashIn(user:IUserInfo) {
-    return await transactionsRepository.cashInInfo(user.id);
+    const transactions = await transactionsRepository.cashInInfo(user.id);
+
+    type Transactions = {
+        id:number,
+        debitedAccountId:number,
+        creditedAccountId:number,
+        value:number,
+        createdAt:Date,
+        username:string
+    };
+
+    const data:Transactions[] = [];
+
+    for(let transaction of transactions) {
+        if(transaction.debitedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.debitedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+        if(transaction.creditedAccountId !== user.id){
+            const user = await authRepository.findUserById(transaction.creditedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+    }
+
+    return data;
 };
 
 const transactionServices = {

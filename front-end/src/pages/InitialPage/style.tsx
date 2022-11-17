@@ -109,10 +109,53 @@ export const Container = styled.div<Props>`
         flex-direction: column;
         padding: 20px;
         width: 90%;
-        height: 80vh;
+        height: 70vh;
         background-color: #ffffff;
         border: solid 4px #0093E9;
         overflow-y: scroll;
+    }
+
+    .filters {
+        display: ${props => props.transactions ? 'flex' : 'none'};
+        width: 90%;
+        margin-top: 10px;
+
+        .filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            border: solid 2px black;
+            border-radius: 6px;
+            width: 120px;
+            height: 30px;
+
+            &:hover{
+                cursor: pointer;
+            }
+        }
+    }
+
+    .all{
+        display: ${props => props.transactions ? 'flex' : 'none'};
+        width: 90%;
+        margin-top: 10px;
+
+        .filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            border: solid 2px black;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 430px;
+            height: 30px;
+
+            &:hover{
+                cursor: pointer;
+            }
+        }
     }
 
     .exit, .enter {

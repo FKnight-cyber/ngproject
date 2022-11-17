@@ -18,6 +18,7 @@ export default function InitialPage() {
     const [receiver, setReceiver] = useState('');
     const [sendAmount, setSendAmount] = useState('0');
     const [allTransactions, setAllTransactions] = useState([]);
+    const [date, setDate] = useState('');
 
     const { token, setToken } = useContext(UserContext);
 
@@ -63,8 +64,6 @@ export default function InitialPage() {
             
             body.value = value;
         }
-
-        console.log(body)
         
         const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/transactions`,body,{
             headers:{'x-access-token': `${token}`}
@@ -94,11 +93,59 @@ export default function InitialPage() {
 
         promise.catch(Error => {
             alert(Error.response.data);
-        })
+        });
+    };
+
+    function getCashInTransactions() {
+        const promise = axios.get(`${process.env.REACT_APP_API_BASE_URL}/my/transactions/in`,{
+            headers:{'x-access-token': `${token}`}
+        });
+
+        promise.then(res => {
+            setAllTransactions(res.data);
+        });
+
+        promise.catch(Error => {
+            alert(Error.response.data);
+        });
+    };
+
+    function getCashOutTransactions() {
+        const promise = axios.get(`${process.env.REACT_APP_API_BASE_URL}/my/transactions/out`,{
+            headers:{'x-access-token': `${token}`}
+        });
+
+        promise.then(res => {
+            setAllTransactions(res.data);
+        });
+
+        promise.catch(Error => {
+            alert(Error.response.data);
+        });
+    };
+
+    function getTransactionsByDate() {
+
+        const body = {
+            date
+        };
+
+        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/my/transactions/date`,body,{
+            headers:{'x-access-token': `${token}`}
+        });
+
+        promise.then(res => {
+            setAllTransactions(res.data);
+        });
+
+        promise.catch(Error => {
+            alert(Error.response.data);
+        });
     };
 
     function renderAllTransactions(transactions:any) {
         const { data } : { data:any } = jwt(token);
+        console.log(transactions)
         return transactions.map((transaction:any, index:any) => 
         <Transaction userId={data.id} debitedId={transaction.debitedAccountId} key={index}>
             <h3>{transaction.debitedAccountId === data.id ? 'Enviado para: ' : 'Recebido de: '}
@@ -153,6 +200,30 @@ export default function InitialPage() {
                 {
                     allTransactions.length > 0 ? renderAllTransactions(allTransactions) : ''
                 }
+            </div>
+            <div className="filters">
+                <div className="filter" onClick={getCashInTransactions}>
+                    <h4>CashIn</h4>
+                </div>
+                <div className="filter" onClick={getCashOutTransactions}>
+                    <h4>CashOut</h4>
+                </div>
+                <input 
+                    type="text" 
+                    value={date} 
+                    placeholder="yyyy-mm-dd"
+                    onChange={e => setDate(e.target.value)}
+                    onKeyDown={(e)=> {
+                        if(e.keyCode === 13){
+                            getTransactionsByDate();
+                        }
+                    }}
+                />
+            </div>
+            <div className="all">
+                <div className="filter" onClick={getAllTransactions}>
+                    <h4>Todas as transações</h4>
+                </div>
             </div>
             <IoExit 
                 className="exit" 
