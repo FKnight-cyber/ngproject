@@ -1,3 +1,4 @@
+import { userInfo } from 'os';
 import prisma from '../database';
 import { ITransactionData } from '../types/transactionTypes';
 
@@ -10,8 +11,9 @@ async function getUserTransactions(id:number) {
         OR:[
             { creditedAccountId: id }, 
             { debitedAccountId: id }
-        ]
-    }});
+        ],
+    }
+});
 };
 
 async function transactionsByDate(id:number, dateInit:Date, dateEnd:number) {

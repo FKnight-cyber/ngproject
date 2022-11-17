@@ -4,6 +4,6 @@ import { getBalance } from "../controllers/accountController";
 
 const accountRouter = Router();
 
-accountRouter.get("/account/info/:id", authentication, getBalance);
+accountRouter.get("/account/info", authentication, getBalance);
 
 export default accountRouter;

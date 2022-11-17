@@ -11,7 +11,7 @@ async function registerUser(user:IUserData) {
     const checkUser = await authRepository.findUserByName(user.username);
     if(checkUser) throw checkError(409, "Username already registered!");
 
-    await accountRepository.insert(100);
+    await accountRepository.insert(10000);
 
     const accountId = (await accountRepository.getLastAccount()).id;
 

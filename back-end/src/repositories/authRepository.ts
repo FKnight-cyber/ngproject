@@ -9,9 +9,14 @@ async function findUserByName(username:string) {
     return prisma.users.findUnique({where:{username}});
 }
 
+async function findUserById(id:number) {
+    return prisma.users.findUnique({where:{id}});
+}
+
 const authRepository = {
     insert,
-    findUserByName
+    findUserByName,
+    findUserById
 };
 
 export default authRepository;
