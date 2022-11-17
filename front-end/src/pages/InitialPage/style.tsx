@@ -175,6 +175,12 @@ export const Container = styled.div<Props>`
         display: ${props => props.transactions ? 'flex' : 'none'};
         left: 14px;
     }
+
+   button {
+        &:hover {
+            cursor: pointer;
+        }
+    }
 `;
 
 export const Transaction = styled.div<TransactionProps>`
