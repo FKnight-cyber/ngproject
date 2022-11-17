@@ -318,13 +318,17 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd https://github.com/FKnight-cyber/myfoods/back-end
+  cd ./ngproject/back-end
+```
+
+```bash
+  cd ./ngproject/front-end
 ```
 
 Install dependencies
 
 ```bash
-  npm install -f
+  npm i --legacy-peer-deps
 ```
 
 Create database
