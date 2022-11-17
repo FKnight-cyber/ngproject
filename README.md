@@ -345,6 +345,8 @@ Start the server
 
 You can also run through docker, check .env
 
+NGINX is exposing port 80
+
 `HOST = ngcash_db`
 
 On root folder run
