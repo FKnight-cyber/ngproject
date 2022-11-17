@@ -6,7 +6,7 @@ import { useContext } from "react";
 import UserContext from "../../contexts/userContext";
 import { useState } from "react";
 import { formatPrice } from "../../utils/formatPrice";
-import { IoExit } from "react-icons/io5";
+import { IoExit, IoEnter } from "react-icons/io5";
 import CurrencyInput from 'react-currency-input-field';
 import jwt from 'jwt-decode';
 
@@ -50,11 +50,22 @@ export default function InitialPage() {
     function sendTo(event:any) {
         event.preventDefault();
 
-        const body = {
+        let value = Number(sendAmount)*100;
+
+        let body = {
             username: receiver,
-            value: Number(sendAmount)*100
+            value
         };
 
+        if(typeof sendAmount === 'string') {
+            let value:any = sendAmount.split(',').join('');
+            value = Number(value);
+            
+            body.value = value;
+        }
+
+        console.log(body)
+        
         const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/transactions`,body,{
             headers:{'x-access-token': `${token}`}
         });
@@ -88,11 +99,12 @@ export default function InitialPage() {
 
     function renderAllTransactions(transactions:any) {
         const { data } : { data:any } = jwt(token);
-
-        transactions.map((transaction:any, index:any) => 
-        <Transaction key={index}>
-            <h3>{transaction.debitedAccount === data.id ? 'Enviado para: ' : 'Recebido de: '}<h4>Fulano de tal</h4></h3>
-            <h4>R$ 10,00</h4>
+        return transactions.map((transaction:any, index:any) => 
+        <Transaction userId={data.id} debitedId={transaction.debitedAccountId} key={index}>
+            <h3>{transaction.debitedAccountId === data.id ? 'Enviado para: ' : 'Recebido de: '}
+            <h4>{transaction.username}</h4>
+            </h3>
+            <h3>Valor: <h4>{formatPrice(transaction.value)}</h4></h3>
         </Transaction>)
     }
 
@@ -129,6 +141,8 @@ export default function InitialPage() {
                 />
                 <CurrencyInput 
                     intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
+                    allowDecimals={true}
+                    decimalScale={2}
                     value={sendAmount}
                     onValueChange={(value) => setSendAmount(value)}
                 />;
@@ -136,13 +150,21 @@ export default function InitialPage() {
             </form>
             <button className="cancel" onClick={() => setTransfer(!transfer)}>Cancel</button>
             <div className="transactions">
-
+                {
+                    allTransactions.length > 0 ? renderAllTransactions(allTransactions) : ''
+                }
             </div>
             <IoExit 
-                className="icon" 
+                className="exit" 
                 color="#ffffff" 
                 size={40}
                 onClick={signOut} 
+            />
+            <IoEnter 
+                className="enter" 
+                color="#ffffff" 
+                size={40}
+                onClick={()=>setDisplayTransactions(false)} 
             />
         </Container>
     )

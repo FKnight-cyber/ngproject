@@ -29,7 +29,45 @@ async function cashOut(user:IUserInfo, receiver:ReceiverInfo) {
 };
 
 async function getTransactions(id:number) {
-    return await transactionsRepository.getUserTransactions(id);
+    const transactions = await transactionsRepository.getUserTransactions(id);
+
+    type Transactions = {
+        id:number,
+        debitedAccountId:number,
+        creditedAccountId:number,
+        value:number,
+        createdAt:Date,
+        username:string
+    };
+
+    const data:Transactions[] = [];
+
+    for(let transaction of transactions) {
+        if(transaction.debitedAccountId !== id){
+            const user = await authRepository.findUserById(transaction.debitedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+        if(transaction.creditedAccountId !== id){
+            const user = await authRepository.findUserById(transaction.creditedAccountId);
+            data.push({
+                id: transaction.id,
+                debitedAccountId: transaction.debitedAccountId,
+                creditedAccountId: transaction.creditedAccountId,
+                value: transaction.value,
+                createdAt: transaction.createdAt,
+                username: user.username
+            });
+        }
+    }
+
+    return data;
 };
 
 async function filterByDate(user:IUserInfo, date:Date) {

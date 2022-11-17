@@ -3,7 +3,12 @@ import styled from "styled-components";
 interface Props {
     transfer: boolean,
     transactions: boolean
-  }
+}
+
+interface TransactionProps {
+    userId: number,
+    debitedId: number
+}
 
 export const Container = styled.div<Props>`
     display: flex;
@@ -33,16 +38,6 @@ export const Container = styled.div<Props>`
             color: #000000;
             font-size: 26px;
             font-weight: bolder;
-        }
-    }
-
-    .icon {
-        position: absolute;
-        top: 14px;
-        right: 14px;
-
-        &:hover {
-            cursor: pointer;
         }
     }
 
@@ -111,24 +106,49 @@ export const Container = styled.div<Props>`
 
     .transactions {
         display: ${props => props.transactions ? 'flex' : 'none'};
+        flex-direction: column;
         padding: 20px;
         width: 90%;
         height: 80vh;
         background-color: #ffffff;
         border: solid 4px #0093E9;
+        overflow-y: scroll;
+    }
+
+    .exit, .enter {
+        position: absolute;
+        top: 14px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .exit {
+        right: 14px;
+    }
+
+    .enter {
+        display: ${props => props.transactions ? 'flex' : 'none'};
+        left: 14px;
     }
 `;
 
-export const Transaction = styled.div`
+export const Transaction = styled.div<TransactionProps>`
     display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
 
     h3 {
         display: flex;
-        margin-right: 20px;
+        margin-right: 4px;
+        margin-bottom: 4px;
+        overflow-y: hidden;
+    }
 
-        h4{
-            margin-left: 6px;
-            color: green;
-        }
+    h4{
+        margin-left: 6px;
+        color: ${props => props.userId === props.debitedId ? "red" : "green"};
+        overflow-y: hidden;
     }
 `

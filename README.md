@@ -271,10 +271,11 @@ GET /my/transactions/in
 [
   {
     "id": 9,
-    "debitedAccountId": 3,
-    "creditedAccountId": 5,
-    "value": 25,
-    "createdAt": "2022-11-15T15:19:56.867Z"
+    "debitedAccountId": 6,
+    "creditedAccountId": 3,
+    "value": 30,
+    "createdAt": "2022-11-15T15:18:56.867Z",
+    "username": "fulanodetal3"
   },
   ...
 ]
